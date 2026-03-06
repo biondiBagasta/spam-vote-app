@@ -7,8 +7,9 @@ class SupabaseService {
   final supabase = Supabase.instance.client;
 
   Future<UserData?> login(String username, String password) async {
+
     final response = await supabase.from("user").select().eq("username", username).eq("password", password).maybeSingle();
-    
+   
     return UserData.fromJson(response);
   }
 

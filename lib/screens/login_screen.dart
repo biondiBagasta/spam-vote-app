@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
       showErrorSnackBar(context, "ERROR", "Username / Password Shouldn't be Empty");
     } else {
       locator.get<SupabaseService>().login(username, password).then((value) {
-        if(value == null) {
+        if(value == null || value.id == null) {
           if(mounted) {
             context.pop();
             showErrorSnackBar(context, "ERROR", "Wrong Username / Password");

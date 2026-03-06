@@ -124,6 +124,42 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Expanded(
                                     child: MainTextComponent(
                                       maxLines: 10,
+                                      text: "Remember This Vote will Automatically Choose Akane and Aqua x Akane, so u don't waste your time so much.", 
+                                      fontSize: 14, 
+                                      fontWeight: FontWeight.w600
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const Divider(),
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                color: Colors.lightBlue.withValues(alpha: 0.5),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(LucideIcons.smartphone),
+                                    const SizedBox(width: 12,),
+                                    Expanded(
+                                      child: MainTextComponent(
+                                        maxLines: 10,
+                                        text: "This Method Below is alternative method if Anime Trending is really tracking your IP.", 
+                                        fontSize: 14, 
+                                        fontWeight: FontWeight.w600
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              const Divider(),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(LucideIcons.smartphone),
+                                  const SizedBox(width: 12,),
+                                  Expanded(
+                                    child: MainTextComponent(
+                                      maxLines: 10,
                                       text: "Remember if you're using ISP Mobile Data, After you're already voting, Activate Your Flight Mode and Deactive it again, so your IP will be randomize again, so Anime Trending can't track it.", 
                                       fontSize: 14, 
                                       fontWeight: FontWeight.w600
