@@ -1,7 +1,10 @@
+import "dart:math";
+
 import "package:akane_vote/components/main_text_component.dart";
 import "package:akane_vote/models/menu_data.dart";
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
+import "package:google_fonts/google_fonts.dart";
 import "package:lucide_icons_flutter/lucide_icons.dart";
 import "package:webview_flutter/webview_flutter.dart";
 
@@ -18,10 +21,17 @@ class WebviewScreen extends StatefulWidget {
 class _WebviewScreenState extends State<WebviewScreen> {
   final webviewController = WebViewController();
 
-  bool hasClicked = false;
+  final genderList = ["Male", "Female"];
+
+  final ageList = ["14 and under", "15-17", "18-21", "26-30", "31+"];
+
+  final random = Random();
+
 
   @override
   void initState() {
+    webviewController.clearCache();
+    webviewController.clearLocalStorage();
     webviewController
     ..setJavaScriptMode(JavaScriptMode.unrestricted)
     ..setBackgroundColor(const Color(0x00000000))
@@ -31,17 +41,30 @@ class _WebviewScreenState extends State<WebviewScreen> {
       if (message.message == 'close_page') {
         Navigator.of(context).pop();
       }
+
+      if (message.message == 'reload_page') {
+        Future.delayed(const Duration(milliseconds: 1000)).then((_) async {
+          webviewController.reload();
+
+          await webviewController.runJavaScript("""
+            localStorage.clear();
+            sessionStorage.clear();
+            indexedDB.databases().then(dbs => {
+              dbs.forEach(db => indexedDB.deleteDatabase(db.name));
+            });
+          """);
+        });
+      }
     },
   )
   ..setNavigationDelegate(
     NavigationDelegate(
       onPageFinished: (url) async {
+        final randomAge = ageList[random.nextInt(ageList.length)];
+        final randomGender = genderList[random.nextInt(genderList.length)];
+        
         await _injectClickListener();
         if(widget.menuData.isCouple == false) {
-          if(hasClicked) return;
-
-          hasClicked = true;
-
           await webviewController.runJavaScript("""
             (function() {
               const btn = Array.from(
@@ -71,9 +94,50 @@ class _WebviewScreenState extends State<WebviewScreen> {
 
                   setTimeout(() => {
                     btn.click();
-                  }, 1000);
+                  }, 200);
                 }
               }, 300);
+
+              // 3. Cari Element Gender
+              const interval2 = setInterval(() => {
+                const elGender = document.querySelector('input[name="sex"][value="$randomGender"]');
+                const elAge = document.querySelector(`input[name="age"][value="$randomAge"]`);
+
+                if(elGender && elAge) {
+                  elGender.click();
+                  elAge.click()
+
+                  setTimeout(() => {
+                    const btnSubmitVote = Array.from(
+                      document.querySelectorAll('[role="button"], button')
+                    ).find(el => 
+                      el.textContent &&
+                      el.textContent.trim().toLowerCase().includes('submit vote')
+                    );
+
+                    btnSubmitVote.click()
+                  }, 500);
+
+                  // Tunggu submit final muncul
+                  const intervalSubmit = setInterval(() => {
+
+                    const btnSubmitFinal = Array.from(
+                      document.querySelectorAll('[role="button"], button')
+                    ).find(el => {
+                      const text = el.textContent?.trim().toLowerCase();
+                      return text === 'submit'; // hanya submit final
+                    });
+
+                    if(btnSubmitFinal){
+                      btnSubmitFinal.click();
+                      clearInterval(intervalSubmit);
+
+                      FlutterChannel.postMessage("reload_page");
+                    }
+
+                  }, 300);
+                }
+              }, 300)
             })();
           """);
         } else {
@@ -96,6 +160,47 @@ class _WebviewScreenState extends State<WebviewScreen> {
                   btn.click();
                 }
               }
+
+              // 3. Cari Element Gender
+              const interval2 = setInterval(() => {
+                const elGender = document.querySelector('input[name="sex"][value="$randomGender"]');
+                const elAge = document.querySelector(`input[name="age"][value="$randomAge"]`);
+
+                if(elGender && elAge) {
+                  elGender.click();
+                  elAge.click()
+
+                  setTimeout(() => {
+                    const btnSubmitVote = Array.from(
+                      document.querySelectorAll('[role="button"], button')
+                    ).find(el => 
+                      el.textContent &&
+                      el.textContent.trim().toLowerCase().includes('submit vote')
+                    );
+
+                    btnSubmitVote.click()
+                  }, 500);
+
+                  // Tunggu submit final muncul
+                  const intervalSubmit = setInterval(() => {
+
+                    const btnSubmitFinal = Array.from(
+                      document.querySelectorAll('[role="button"], button')
+                    ).find(el => {
+                      const text = el.textContent?.trim().toLowerCase();
+                      return text === 'submit'; // hanya submit final
+                    });
+
+                    if(btnSubmitFinal){
+                      btnSubmitFinal.click();
+                      clearInterval(intervalSubmit);
+
+                      FlutterChannel.postMessage("reload_page");
+                    }
+
+                  }, 300);
+                }
+              }, 300)
             })();
             """
           );
@@ -150,12 +255,21 @@ class _WebviewScreenState extends State<WebviewScreen> {
       canPop: false,
       child: Scaffold(
         appBar: AppBar(
+          leadingWidth: 100,
+          centerTitle: true,
           title: MainTextComponent(text: widget.menuData.name!, fontSize: 14, fontWeight: FontWeight.w600),
           leading: GestureDetector(
             onTap: () {
               context.pop();
             },
-            child: Icon(LucideIcons.arrowLeft),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(LucideIcons.arrowLeft),
+                const SizedBox(width: 4,),
+                Text("Close", style: GoogleFonts.openSans(),)
+              ],
+            ),
           ),
         ),
         body: SafeArea(

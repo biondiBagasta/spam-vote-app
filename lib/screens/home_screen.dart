@@ -132,6 +132,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                               const Divider(),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(LucideIcons.smartphone),
+                                  const SizedBox(width: 12,),
+                                  Expanded(
+                                    child: MainTextComponent(
+                                      maxLines: 10,
+                                      text: "Remember This Vote doesn't work if you're Running the App on the Backround aka If you're Minimizing your App.", 
+                                      fontSize: 14, 
+                                      fontWeight: FontWeight.w600
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const Divider(),
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 color: Colors.lightBlue.withValues(alpha: 0.5),
@@ -161,22 +177,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: MainTextComponent(
                                       maxLines: 10,
                                       text: "Remember if you're using ISP Mobile Data, After you're already voting, Activate Your Flight Mode and Deactive it again, so your IP will be randomize again, so Anime Trending can't track it.", 
-                                      fontSize: 14, 
-                                      fontWeight: FontWeight.w600
-                                    ),
-                                  )
-                                ],
-                              ),
-                              const Divider(),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(LucideIcons.wifi),
-                                  const SizedBox(width: 12,),
-                                  Expanded(
-                                    child: MainTextComponent(
-                                      maxLines: 10,
-                                      text: "Remember if you're using Wifi, use VPN and then disconnect and reconnect your VPN, so Anime Trending won't tracking your IP.", 
                                       fontSize: 14, 
                                       fontWeight: FontWeight.w600
                                     ),
