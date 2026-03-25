@@ -83,20 +83,18 @@ class _WebviewScreenState extends State<WebviewScreen> {
                 const el = document.getElementById('${widget.menuData.targetElement}');
 
                 if (el) {
-                  el.click();
-
-                  const rect = el.getBoundingClientRect();
-                  window.scrollTo({
-                    top: rect.top + window.scrollY - 100
-                  });
+                  
 
                   clearInterval(interval);
 
                   setTimeout(() => {
-                    btn.click();
-                  }, 200);
+                    el.click();
+                    setTimeout(() => {
+                      btn.click();
+                    }, 300)
+                  }, 500);
                 }
-              }, 300);
+              }, 500);
 
               // 3. Cari Element Gender
               const interval2 = setInterval(() => {
@@ -195,7 +193,9 @@ class _WebviewScreenState extends State<WebviewScreen> {
                       btnSubmitFinal.click();
                       clearInterval(intervalSubmit);
 
-                      FlutterChannel.postMessage("reload_page");
+                      setTimeout(() => {
+                        FlutterChannel.postMessage("reload_page");
+                      }, 500);
                     }
 
                   }, 300);
