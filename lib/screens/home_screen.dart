@@ -240,6 +240,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                     if (index == dataList.length) {
                                       return ListTile(
                                         onTap: () {
+                                          context.pushNamed("anime-corner");
+                                        },
+                                        leading: Icon(LucideIcons.flower, color: Colors.red,),
+                                        title: MainTextComponent(
+                                          text: "Vote for Anime Corner",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                        trailing: Icon(LucideIcons.chevronRight),
+                                      );
+                                    }
+
+                                    if (index == dataList.length + 1) {
+                                      return ListTile(
+                                        onTap: () {
                                           locator.get<SupabaseService>().updateUserLoginStatusLogout(
                                             locator.get<UserCubit>().state.userData.username!
                                           ).then((_) {
@@ -285,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   separatorBuilder: (context, index) {
                                     return Divider();
                                   }, 
-                                  itemCount: snapshot.data!.length + 1
+                                  itemCount: snapshot.data!.length + 2
                                 ),
                               ],
                             )

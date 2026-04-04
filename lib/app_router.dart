@@ -1,5 +1,6 @@
 
 import 'package:akane_vote/models/menu_data.dart';
+import 'package:akane_vote/screens/anime_corner_screen.dart';
 import 'package:akane_vote/screens/home_screen.dart';
 import 'package:akane_vote/screens/login_screen.dart';
 import 'package:akane_vote/screens/splash_screen.dart';
@@ -41,7 +42,14 @@ class AppRouter {
 
           return WebviewScreen(menuData: menuData);
         },
-      )
+      ),
+      GoRoute(
+        path: "/anime-corner",
+        name: "anime-corner",
+        builder: (context, state) {
+          return AnimeCornerScreen();
+        },
+      ),
     ]
   );
 
