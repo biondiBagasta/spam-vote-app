@@ -47,7 +47,11 @@ class AppRouter {
         path: "/anime-corner",
         name: "anime-corner",
         builder: (context, state) {
-          return AnimeCornerScreen();
+          final extra = state.extra as Map<dynamic, dynamic>;
+
+          final menuData = extra["menuData"] as MenuData;
+
+          return AnimeCornerScreen(menuData: menuData,);
         },
       ),
     ]

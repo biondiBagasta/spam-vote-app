@@ -236,23 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   itemBuilder: (context, index) {
                                     final dataList = snapshot.data!;
                                 
-                                    // 👉 Jika index terakhir (item tambahan)
                                     if (index == dataList.length) {
-                                      return ListTile(
-                                        onTap: () {
-                                          context.pushNamed("anime-corner");
-                                        },
-                                        leading: Icon(LucideIcons.flower, color: Colors.red,),
-                                        title: MainTextComponent(
-                                          text: "Vote for Anime Corner",
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                        trailing: Icon(LucideIcons.chevronRight),
-                                      );
-                                    }
-
-                                    if (index == dataList.length + 1) {
                                       return ListTile(
                                         onTap: () {
                                           locator.get<SupabaseService>().updateUserLoginStatusLogout(
@@ -280,14 +264,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                 
                                     return ListTile(
                                       onTap: () {
-                                        context.pushNamed("webview", extra: {
-                                          "menuData": snapshot.data![index]
-                                        });
+                                        if(item.isCouple == 3) {
+                                          context.pushNamed("anime-corner", extra: {
+                                            "menuData": snapshot.data![index]
+                                          });
+                                        } else {
+                                          context.pushNamed("webview", extra: {
+                                            "menuData": snapshot.data![index]
+                                          });
+                                        }
+                                        
                                       },
                                       leading: Icon(
-                                        item.isCouple == true
-                                            ? LucideIcons.heart600
-                                            : LucideIcons.user,
+                                        item.isCouple == 1
+                                            ? LucideIcons.heart600 :
+                                            item.isCouple == 0 ?
+                                            LucideIcons.user : LucideIcons.flower600,
+                                            color: item.isCouple == 3 ? Colors.red : Colors.orange,
                                       ),
                                       title: MainTextComponent(
                                         text: item.name ?? "",
@@ -300,7 +293,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   separatorBuilder: (context, index) {
                                     return Divider();
                                   }, 
-                                  itemCount: snapshot.data!.length + 2
+                                  itemCount: snapshot.data!.length + 1
                                 ),
                               ],
                             )

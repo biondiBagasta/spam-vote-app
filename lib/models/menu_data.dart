@@ -4,7 +4,7 @@ class MenuData {
   final String? url;
   final String? targetElement;
   final String? blockedElement;
-  final bool? isCouple;
+  final int? isCouple;
   final String? name;
 
   MenuData({
@@ -28,9 +28,7 @@ class MenuData {
       url: json['url'] as String?,
       targetElement: json['target_element'] as String?,
       blockedElement: json['blocked_element'] as String?,
-      isCouple: json['is_couple'] != null
-          ? json['is_couple'] == 1 || json['is_couple'] == true
-          : null,
+      isCouple: json['is_couple'] as int?,
       name: json['name'] as String?,
     );
   }
@@ -42,7 +40,7 @@ class MenuData {
       'url': url,
       'target_element': targetElement,
       'blocked_element': blockedElement,
-      'is_couple': isCouple == true ? 1 : 0,
+      'is_couple': isCouple,
       'name': name,
     };
   }

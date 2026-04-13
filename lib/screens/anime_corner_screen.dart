@@ -1,6 +1,9 @@
 import "dart:math";
 
 import "package:akane_vote/components/main_text_component.dart";
+import "package:akane_vote/cubit/user_cubit.dart";
+import "package:akane_vote/locator.dart";
+import "package:akane_vote/models/menu_data.dart";
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 import "package:google_fonts/google_fonts.dart";
@@ -9,7 +12,9 @@ import "package:webview_flutter/webview_flutter.dart";
 
 class AnimeCornerScreen extends StatefulWidget {
 
-  const AnimeCornerScreen({ super.key });
+  const AnimeCornerScreen({ super.key, required this.menuData });
+
+  final MenuData menuData;
 
 
   @override
@@ -27,12 +32,8 @@ class _AnimeCornerScreenState extends State<AnimeCornerScreen> {
 
   final random = Random();
 
-  final urlVote = "https://polls.animecorner.me/group/vote/aots-winter2026";
-
   final femaleCharacterTitle = "Best Female Character";
   final coupleTitle = "Best Ship or Couple";
-  final akaneCharacterTitle = "Akane Kurokawa";
-  final aquaAkaneCharacterTitle = "Aqua Hoshino x Akane Kurokawa";
 
   @override
   void initState() {
@@ -87,7 +88,7 @@ class _AnimeCornerScreenState extends State<AnimeCornerScreen> {
             setTimeout(() => {
               // 2️⃣ Tunggu element Akane Muncul
               const interval = setInterval(() => {
-                const el = document.querySelector('[data-title="$akaneCharacterTitle"]');
+                const el = document.querySelector('[data-title="${widget.menuData.targetElement}"]');
                 
                 if (el) {
                   clearInterval(interval);
@@ -113,7 +114,7 @@ class _AnimeCornerScreenState extends State<AnimeCornerScreen> {
             setTimeout(() => {
               // 4 Aqua x Akane Element
               const interval = setInterval(() => {
-                const el = document.querySelector('[data-title="$aquaAkaneCharacterTitle"]');
+                const el = document.querySelector('[data-title="${widget.menuData.blockedElement}"]');
                 
                 if (el) {
                   clearInterval(interval);
@@ -173,7 +174,7 @@ class _AnimeCornerScreenState extends State<AnimeCornerScreen> {
                     el.click();
                     setTimeout(() => {
                       FlutterChannel.postMessage("reload_page");
-                    }, 1000)
+                    }, 1500)
                   }, 1000);
                 }
               }, 100);
@@ -183,7 +184,7 @@ class _AnimeCornerScreenState extends State<AnimeCornerScreen> {
       },
     ),
   )
-  ..loadRequest(Uri.parse(urlVote));
+  ..loadRequest(Uri.parse(widget.menuData.url!));
 
     super.initState();
   }
@@ -206,13 +207,14 @@ class _AnimeCornerScreenState extends State<AnimeCornerScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    
     return PopScope(
       canPop: false,
       child: Scaffold(
         appBar: AppBar(
           leadingWidth: 100,
           centerTitle: true,
-          title: MainTextComponent(text: "Anime Corner Vote", fontSize: 14, fontWeight: FontWeight.w600),
+          title: MainTextComponent(text: "${widget.menuData.name} (${locator.get<UserCubit>().state.userData.id})", fontSize: 14, fontWeight: FontWeight.w600),
           leading: GestureDetector(
             onTap: () {
               context.pop();

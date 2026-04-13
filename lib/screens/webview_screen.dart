@@ -1,6 +1,8 @@
 import "dart:math";
 
 import "package:akane_vote/components/main_text_component.dart";
+import "package:akane_vote/cubit/user_cubit.dart";
+import "package:akane_vote/locator.dart";
 import "package:akane_vote/models/menu_data.dart";
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
@@ -64,7 +66,7 @@ class _WebviewScreenState extends State<WebviewScreen> {
         final randomGender = genderList[random.nextInt(genderList.length)];
         
         await _injectClickListener();
-        if(widget.menuData.isCouple == false) {
+        if(widget.menuData.isCouple == 0) {
           await webviewController.runJavaScript("""
             (function() {
               const btn = Array.from(
@@ -257,7 +259,7 @@ class _WebviewScreenState extends State<WebviewScreen> {
         appBar: AppBar(
           leadingWidth: 100,
           centerTitle: true,
-          title: MainTextComponent(text: widget.menuData.name!, fontSize: 14, fontWeight: FontWeight.w600),
+          title: MainTextComponent(text: "${widget.menuData.name!} (${locator.get<UserCubit>().state.userData.id})", fontSize: 14, fontWeight: FontWeight.w600),
           leading: GestureDetector(
             onTap: () {
               context.pop();
